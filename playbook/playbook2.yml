@@ -1,0 +1,30 @@
+---
+- hosts: slave1
+  become: true
+  tasks:
+    - name: install nginx
+      apt:
+        pkg: nginx
+        state: present
+    - name: start nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+- hosts: slave2
+  become: true
+  tasks:
+    - name: install apache
+      apt:
+        pkg: apache2
+        state: present
+    - name: start apache3 service
+      service:
+        name: apache2
+        state: started
+        enabled: true
+  handlers:
+   - name: run update
+     apt:
+       update_cache: yes

@@ -1,0 +1,26 @@
+---
+- name: install nginx
+  apt:
+    pkg: nginx
+    state: present
+  notify:
+    - start nginx
+
+- name: Upload
+  copy:
+    src: index.html
+    dest: /usr/share/nginx/www/
+    mode: '0644'
+  register: php
+  ignore_errors: true
+
+- name: Remove index.html for hosts
+  command: rm /usr/share/nginx/www/index.html
+  when: php is success
+
+- name: Upload default index.html for hosts
+  copy:
+    src: index.html
+    dest: /usr/share/nginx/www/
+    mode: '0644'
+  when: php is failed
